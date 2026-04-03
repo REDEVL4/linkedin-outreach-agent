@@ -2,31 +2,28 @@
 
 I built this project to make LinkedIn outreach feel more natural, more personalized, and much less repetitive.
 
-The idea started as a Codex plugin for drafting replies based on my own background, writing style, and career goals. From there, I turned it into a Chrome extension that can work directly on LinkedIn pages, read the visible context, generate a response in my voice, and help me handle things like recruiter replies, networking follow-ups, post comments, and connection requests.
+This is a Chrome extension that works directly on LinkedIn pages, reads the visible context, generates responses in my voice, and helps me handle recruiter replies, networking follow-ups, post comments, and connection requests.
 
 What I wanted was not a generic AI writer that sounds polished but fake. I wanted something that stays grounded in my real profile, sounds like me, and helps me move faster without losing control over the final message.
 
 ## What this project includes
 
-This repository has two related pieces:
-
-- A Codex plugin that stores my profile context, tone guidance, and reusable prompt structure for LinkedIn drafting.
-- A Chrome extension that runs on LinkedIn and lets me generate, fill, review, and sometimes send replies directly from the page.
+This repository contains the Chrome extension, including the LinkedIn overlay, model-provider configuration, shared prompt logic, and browser-agent workflows.
 
 ## Main features
 
-- Uses my saved profile context and style guide so replies stay aligned with my real background.
-- Supports recruiter replies, post comments, networking follow-ups, connection acceptance replies, and connection requests.
-- Can read visible LinkedIn page context or message-thread context before drafting.
-- Supports OpenAI, Ollama, and OpenAI-compatible local model servers.
-- Includes a browser-agent mode that can open dialogs, fill fields, and help with repetitive LinkedIn actions.
-- Adds a review-first flow for recruiter replies so I can approve or edit the message before it is sent.
+- Uses my saved profile context and style guide so replies stay aligned with my real background
+- Supports recruiter replies, post comments, networking follow-ups, connection acceptance replies, and connection requests
+- Can read visible LinkedIn page context or message-thread context before drafting
+- Supports OpenAI, Ollama, and OpenAI-compatible local model servers
+- Includes a browser-agent mode that can open dialogs, fill fields, and help with repetitive LinkedIn actions
+- Adds a review-first flow for recruiter replies so I can approve or edit the message before it is sent
 
 ## Why I built it this way
 
 I wanted something practical for real outreach, not just a demo.
 
-When I’m replying to recruiters or sending networking messages, the hard part is usually not writing English. The hard part is staying specific, staying honest, and keeping the tone natural. A lot of AI-generated outreach sounds too polished, too eager, or too generic. This project is meant to help with that by grounding every draft in actual profile information and a simple voice guide.
+When I'm replying to recruiters or sending networking messages, the hard part is usually not writing English. The hard part is staying specific, staying honest, and keeping the tone natural. A lot of AI-generated outreach sounds too polished, too eager, or too generic. This project is meant to help with that by grounding every draft in actual profile information and a simple voice guide.
 
 I also wanted flexibility in model choice. Some days I may want to use OpenAI. Other times I may want to keep everything local with Ollama or another OpenAI-compatible server.
 
@@ -36,15 +33,6 @@ I also wanted flexibility in model choice. Some days I may want to use OpenAI. O
 
 - The main Chrome extension code
 - Includes the LinkedIn overlay, settings page, popup, shared prompt logic, and background service worker
-
-`plugins/linkedin-reply-assistant/`
-
-- The original Codex plugin version
-- Includes knowledge files like my profile context and style guide
-
-`.agents/plugins/marketplace.json`
-
-- Local Codex marketplace registration for the plugin
 
 ## How the Chrome extension works
 
@@ -97,34 +85,25 @@ This works for tools like LM Studio or other servers that expose an OpenAI-style
 5. Open the extension settings and choose the provider you want
 6. Save settings and open a fresh LinkedIn tab
 
-## Installing the Codex plugin
-
-The Codex plugin files are included in this repo under `plugins/linkedin-reply-assistant`.
-
-That version is useful if I want the profile-grounded drafting workflow directly inside Codex, separate from the Chrome extension.
-
 ## Key files
 
 - `chrome-extension/manifest.json`
 - `chrome-extension/src/content.js`
 - `chrome-extension/src/background.js`
 - `chrome-extension/src/shared.js`
-- `plugins/linkedin-reply-assistant/.codex-plugin/plugin.json`
-- `plugins/linkedin-reply-assistant/knowledge/profile.md`
-- `plugins/linkedin-reply-assistant/knowledge/style-guide.md`
 
 ## Responsible use
 
 This project can help with drafting and browser automation, but I still treat it as an assistant, not a replacement for judgment.
 
-That matters especially on LinkedIn. Messages should stay truthful, respectful, and relevant to the person I’m contacting. I do not want the tool inventing experience, over-claiming skills, or sending careless bulk outreach.
+That matters especially on LinkedIn. Messages should stay truthful, respectful, and relevant to the person I'm contacting. I do not want the tool inventing experience, over-claiming skills, or sending careless bulk outreach.
 
 ## Current limitations
 
-- LinkedIn changes its DOM often, so selectors may need updates over time.
-- Local model performance depends on whether Ollama or another server is running correctly.
-- Fully autonomous browser actions should be used carefully and reviewed before scaling them up.
-- This project does not use a logged-in ChatGPT web session directly.
+- LinkedIn changes its DOM often, so selectors may need updates over time
+- Local model performance depends on whether Ollama or another server is running correctly
+- Fully autonomous browser actions should be used carefully and reviewed before scaling them up
+- This project does not use a logged-in ChatGPT web session directly
 
 ## Future improvements
 
