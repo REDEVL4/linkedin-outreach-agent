@@ -6,6 +6,12 @@ This is a Chrome extension that works directly on LinkedIn pages, reads the visi
 
 What I wanted was not a generic AI writer that sounds polished but fake. I wanted something that stays grounded in my real profile, sounds like me, and helps me move faster without losing control over the final message.
 
+![Overview](docs/media/screenshot-overview.png)
+
+## Tagline
+
+Natural LinkedIn replies, recruiter responses, and connection outreach with browser-side automation and local or cloud LLM support.
+
 ## What this project includes
 
 This repository contains the Chrome extension, including the LinkedIn overlay, model-provider configuration, shared prompt logic, and browser-agent workflows.
@@ -18,6 +24,20 @@ This repository contains the Chrome extension, including the LinkedIn overlay, m
 - Supports OpenAI, Ollama, and OpenAI-compatible local model servers
 - Includes a browser-agent mode that can open dialogs, fill fields, and help with repetitive LinkedIn actions
 - Adds a review-first flow for recruiter replies so I can approve or edit the message before it is sent
+
+## Screenshots
+
+### Recruiter reply flow
+
+The extension reads the visible conversation, drafts a single response in a natural tone, and pauses for review before sending.
+
+![Recruiter reply screenshot](docs/media/screenshot-recruiter-reply.png)
+
+### Connection request workflow
+
+The browser agent can open connection flows, fill short notes, and keep visible progress while it works through a batch.
+
+![Connection request screenshot](docs/media/screenshot-connection-requests.png)
 
 ## Why I built it this way
 
@@ -84,6 +104,16 @@ This works for tools like LM Studio or other servers that expose an OpenAI-style
 4. Select the `chrome-extension` folder
 5. Open the extension settings and choose the provider you want
 6. Save settings and open a fresh LinkedIn tab
+
+## Demo
+
+### Install flow
+
+![Install demo](docs/media/demo-install.gif)
+
+### Usage flow
+
+![Usage demo](docs/media/demo-usage.gif)
 
 ## Key files
 
