@@ -1,0 +1,35 @@
+{
+  "name": "linkedin-reply-assistant",
+  "version": "0.1.0",
+  "description": "Drafts LinkedIn replies and comments using the user's background, offers, and voice.",
+  "author": {
+    "name": "Reddy"
+  },
+  "license": "UNLICENSED",
+  "keywords": [
+    "linkedin",
+    "networking",
+    "copywriting",
+    "personal-brand"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "LinkedIn Reply Assistant",
+    "shortDescription": "Draft grounded LinkedIn replies from your profile and voice.",
+    "longDescription": "Helps draft thoughtful LinkedIn direct-message replies and post comments using your background, offers, proof points, boundaries, and preferred tone.",
+    "developerName": "Reddy",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Draft a warm reply to this LinkedIn DM using my profile.",
+      "Write 3 comment options for this post in my voice.",
+      "Turn this message into a concise follow-up with a soft CTA."
+    ],
+    "brandColor": "#0A66C2",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/logo.svg"
+  }
+}

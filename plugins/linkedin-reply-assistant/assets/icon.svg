@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="LinkedIn Reply Assistant icon">
+  <rect width="128" height="128" rx="24" fill="#0A66C2"/>
+  <path d="M26 34h76a8 8 0 0 1 8 8v34a8 8 0 0 1-8 8H56l-20 16v-16H26a8 8 0 0 1-8-8V42a8 8 0 0 1 8-8Z" fill="#ffffff"/>
+  <path d="M44 54h40M44 67h31" stroke="#0A66C2" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="89" cy="92" r="15" fill="#083B74"/>
+  <path d="m83 92 5 5 9-12" fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

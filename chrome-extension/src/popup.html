@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn Reply Assistant</title>
+    <link rel="stylesheet" href="popup.css">
+  </head>
+  <body>
+    <main class="popup-shell">
+      <p class="popup-kicker">LinkedIn AI</p>
+      <h1>Draft faster on LinkedIn.</h1>
+      <p class="popup-copy">
+        Open a LinkedIn tab, click the floating AI button, and generate replies with OpenAI or your local LLM.
+      </p>
+      <div class="popup-meta" id="providerSummary">Loading provider...</div>
+      <div class="popup-actions">
+        <button id="openSettings" class="popup-button popup-button--primary" type="button">Open Settings</button>
+        <button id="openLinkedIn" class="popup-button popup-button--ghost" type="button">Open LinkedIn</button>
+      </div>
+    </main>
+
+    <script src="shared.js"></script>
+    <script src="popup.js"></script>
+  </body>
+  </html>

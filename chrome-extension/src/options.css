@@ -1,0 +1,211 @@
+:root {
+  color-scheme: dark;
+  --bg: #061120;
+  --panel: #0d1f35;
+  --panel-2: #122943;
+  --text: #ecf7ff;
+  --muted: rgba(236, 247, 255, 0.72);
+  --line: rgba(255, 255, 255, 0.08);
+  --accent: #69c1ff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", "Inter", sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(40, 115, 205, 0.26), transparent 30%),
+    linear-gradient(180deg, #04101d 0%, #071523 60%, #091829 100%);
+  color: var(--text);
+}
+
+.settings-shell {
+  width: min(1080px, calc(100vw - 40px));
+  margin: 32px auto 48px;
+}
+
+.settings-hero {
+  padding: 24px 4px 10px;
+}
+
+.settings-kicker {
+  margin: 0 0 10px;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #93ccff;
+}
+
+.settings-hero h1 {
+  margin: 0;
+  font-size: clamp(40px, 8vw, 72px);
+  line-height: 0.96;
+  letter-spacing: -0.04em;
+}
+
+.settings-intro {
+  max-width: 760px;
+  margin: 16px 0 0;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+.settings-section {
+  margin-top: 22px;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.015)),
+    rgba(8, 21, 38, 0.82);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+}
+
+.section-heading {
+  margin-bottom: 18px;
+}
+
+.section-heading h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.section-heading p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.provider-panels {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.provider-panel {
+  padding: 18px;
+  border-radius: 22px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.provider-panel h3 {
+  margin: 0 0 16px;
+  font-size: 17px;
+}
+
+.field {
+  display: block;
+  margin-bottom: 16px;
+}
+
+.field span {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 650;
+  color: #f3fbff;
+}
+
+.field-inline {
+  max-width: 240px;
+}
+
+.check-field {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.check-field input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+}
+
+.check-field span {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  padding: 14px 16px;
+  font: inherit;
+  outline: none;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 160px;
+  line-height: 1.55;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: rgba(105, 193, 255, 0.72);
+  box-shadow: 0 0 0 3px rgba(105, 193, 255, 0.16);
+}
+
+.settings-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.primary-button,
+.ghost-button {
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.primary-button {
+  color: #05203f;
+  background: linear-gradient(135deg, #a4e0ff 0%, #69c1ff 42%, #eefaff 100%);
+}
+
+.ghost-button {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.status-message {
+  margin: 0 0 0 auto;
+  color: #9ed7ff;
+}
+
+@media (max-width: 760px) {
+  .settings-shell {
+    width: calc(100vw - 20px);
+    margin: 16px auto 28px;
+  }
+
+  .settings-section {
+    padding: 18px;
+    border-radius: 22px;
+  }
+
+  .status-message {
+    margin-left: 0;
+    width: 100%;
+  }
+}

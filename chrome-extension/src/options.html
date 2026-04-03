@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn Reply Assistant Settings</title>
+    <link rel="stylesheet" href="options.css">
+  </head>
+  <body>
+    <main class="settings-shell">
+      <section class="settings-hero">
+        <p class="settings-kicker">Chrome Extension</p>
+        <h1>LinkedIn Reply Assistant</h1>
+        <p class="settings-intro">
+          Configure your model provider, keep your profile context in one place, and generate LinkedIn drafts directly on the page.
+        </p>
+      </section>
+
+      <section class="settings-section">
+        <div class="section-heading">
+          <h2>Model Provider</h2>
+          <p>Use OpenAI, Ollama, or any local OpenAI-compatible server. Direct chatgpt.com session access is not part of this extension.</p>
+        </div>
+
+        <label class="field">
+          <span>Provider Type</span>
+          <select id="providerType">
+            <option value="ollama">ollama</option>
+            <option value="openai">openai</option>
+            <option value="openai-compatible">openai-compatible</option>
+          </select>
+        </label>
+
+        <div class="provider-panels">
+          <section class="provider-panel" data-provider="openai">
+            <h3>OpenAI / ChatGPT API</h3>
+            <label class="field">
+              <span>Base URL</span>
+              <input id="openaiBaseUrl" type="text">
+            </label>
+            <label class="field">
+              <span>API Key</span>
+              <input id="openaiApiKey" type="password" placeholder="sk-...">
+            </label>
+            <label class="field">
+              <span>Model</span>
+              <input id="openaiModel" type="text" placeholder="gpt-5.4">
+            </label>
+          </section>
+
+          <section class="provider-panel" data-provider="openai-compatible">
+            <h3>OpenAI-Compatible Local Server</h3>
+            <label class="field">
+              <span>Base URL</span>
+              <input id="compatibleBaseUrl" type="text" placeholder="http://127.0.0.1:1234/v1">
+            </label>
+            <label class="field">
+              <span>API Key</span>
+              <input id="compatibleApiKey" type="password" placeholder="Optional">
+            </label>
+            <label class="field">
+              <span>Model</span>
+              <input id="compatibleModel" type="text" placeholder="your-local-model">
+            </label>
+          </section>
+
+          <section class="provider-panel" data-provider="ollama">
+            <h3>Ollama</h3>
+            <label class="field">
+              <span>Base URL</span>
+              <input id="ollamaBaseUrl" type="text" placeholder="http://127.0.0.1:11434">
+            </label>
+            <label class="field">
+              <span>Model</span>
+              <input id="ollamaModel" type="text" placeholder="gemma3:12b">
+            </label>
+          </section>
+        </div>
+      </section>
+
+      <section class="settings-section">
+        <div class="section-heading">
+          <h2>LinkedIn Context</h2>
+          <p>This information gets injected into your prompts so the model writes like you and stays grounded in your real background.</p>
+        </div>
+
+        <label class="field">
+          <span>Profile Context</span>
+          <textarea id="profileContext" rows="18"></textarea>
+        </label>
+
+        <label class="field">
+          <span>Style Guide</span>
+          <textarea id="styleGuide" rows="14"></textarea>
+        </label>
+
+        <label class="field field-inline">
+          <span>Default Output Count</span>
+          <input id="defaultOutputCount" type="number" min="1" max="5">
+        </label>
+      </section>
+
+      <section class="settings-section">
+        <div class="section-heading">
+          <h2>Browser Agent</h2>
+          <p>Let the extension click LinkedIn buttons, open composers, insert generated text, and optionally send it. Default mode keeps final send turned off.</p>
+        </div>
+
+        <label class="check-field">
+          <input id="browserTakeoverEnabled" type="checkbox">
+          <span>Enable browser takeover actions</span>
+        </label>
+
+        <label class="check-field">
+          <input id="autoSendEnabled" type="checkbox">
+          <span>Allow final auto-send clicks</span>
+        </label>
+
+        <label class="field field-inline">
+          <span>Max actions per run</span>
+          <input id="automationBatchSize" type="number" min="1" max="100">
+        </label>
+
+        <label class="field field-inline">
+          <span>Delay between steps (ms)</span>
+          <input id="automationDelayMs" type="number" min="300" max="10000" step="100">
+        </label>
+      </section>
+
+      <section class="settings-section settings-actions">
+        <button id="resetDefaults" class="ghost-button" type="button">Reset Defaults</button>
+        <button id="saveSettings" class="primary-button" type="button">Save Settings</button>
+        <p id="statusMessage" class="status-message">Ready.</p>
+      </section>
+    </main>
+
+    <script src="shared.js"></script>
+    <script src="options.js"></script>
+  </body>
+  </html>
