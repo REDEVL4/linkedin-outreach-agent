@@ -23,10 +23,12 @@
   const statusMessage = document.getElementById("statusMessage");
   const saveButton = document.getElementById("saveSettings");
   const resetButton = document.getElementById("resetDefaults");
+  const testButton = document.getElementById("testProvider");
 
   document.getElementById("providerType").addEventListener("change", refreshProviderPanels);
   saveButton.addEventListener("click", saveSettings);
   resetButton.addEventListener("click", resetDefaults);
+  testButton.addEventListener("click", testProvider);
 
   void loadSettings();
 
@@ -54,12 +56,7 @@
   }
 
   async function saveSettings() {
-    const nextSettings = {};
-    ids.forEach((id) => {
-      nextSettings[id] = elements[id].type === "checkbox" ? elements[id].checked : elements[id].value;
-    });
-
-    const normalized = shared.normalizeSettings(nextSettings);
+    const normalized = collectSettings();
     await chrome.storage.local.set(normalized);
     statusMessage.textContent = "Saved. LinkedIn pages will use the updated settings immediately.";
   }
@@ -76,5 +73,34 @@
     });
     refreshProviderPanels();
     statusMessage.textContent = "Defaults restored.";
+  }
+
+  function collectSettings() {
+    const nextSettings = {};
+    ids.forEach((id) => {
+      nextSettings[id] = elements[id].type === "checkbox" ? elements[id].checked : elements[id].value;
+    });
+
+    return shared.normalizeSettings(nextSettings);
+  }
+
+  async function testProvider() {
+    const normalized = collectSettings();
+    statusMessage.textContent = "Testing provider connection...";
+
+    try {
+      const response = await chrome.runtime.sendMessage({
+        type: "testProvider",
+        settings: normalized
+      });
+
+      if (!response?.ok) {
+        throw new Error(response?.error || "Provider test failed.");
+      }
+
+      statusMessage.textContent = response.result;
+    } catch (error) {
+      statusMessage.textContent = error.message || "Provider test failed.";
+    }
   }
 })();

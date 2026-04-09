@@ -533,6 +533,116 @@
       return document.querySelector("textarea[name='message'], textarea#custom-message, textarea, [contenteditable='true'][role='textbox']");
     }
 
+    function getVisibleElements(selector) {
+      return Array.from(document.querySelectorAll(selector))
+        .filter((node) => node instanceof HTMLElement)
+        .filter((node) => {
+          const rect = node.getBoundingClientRect();
+          return rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.right > 0;
+        });
+    }
+
+    function getSelectionAnchorElement() {
+      const selection = window.getSelection();
+      const anchorNode = selection?.anchorNode || null;
+      if (!anchorNode) {
+        return null;
+      }
+      return anchorNode instanceof HTMLElement ? anchorNode : anchorNode.parentElement;
+    }
+
+    function getElementViewportDistance(node) {
+      if (!(node instanceof HTMLElement)) {
+        return Number.POSITIVE_INFINITY;
+      }
+      const rect = node.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const viewportX = window.innerWidth / 2;
+      const viewportY = Math.min(window.innerHeight / 2, 420);
+      return Math.abs(centerX - viewportX) + Math.abs(centerY - viewportY);
+    }
+
+    function findVisiblePostContainers() {
+      const selectors = [
+        ".feed-shared-update-v2",
+        ".occludable-update",
+        "article[data-id]",
+        "article"
+      ];
+      const seen = new Set();
+      return selectors
+        .flatMap((selector) => getVisibleElements(selector))
+        .filter((node) => {
+          if (seen.has(node)) {
+            return false;
+          }
+          seen.add(node);
+          return true;
+        })
+        .filter((node) => /comment/i.test(node.innerText || ""));
+    }
+
+    function findBestPostContainer() {
+      const candidates = [];
+      const seen = new Set();
+      const addCandidate = (node) => {
+        if (!(node instanceof HTMLElement) || seen.has(node)) {
+          return;
+        }
+        seen.add(node);
+        candidates.push(node);
+      };
+
+      const focusedRoot = lastFocusedEditable instanceof HTMLElement ? lastFocusedEditable.closest(".feed-shared-update-v2, .occludable-update, article") : null;
+      addCandidate(focusedRoot);
+      addCandidate(getSelectionAnchorElement()?.closest(".feed-shared-update-v2, .occludable-update, article"));
+      findVisiblePostContainers().forEach(addCandidate);
+
+      return candidates
+        .filter(Boolean)
+        .sort((left, right) => getElementViewportDistance(left) - getElementViewportDistance(right))[0] || null;
+    }
+
+    function findCommentButtonForPost(postContainer) {
+      if (!(postContainer instanceof HTMLElement)) {
+        return null;
+      }
+      return (
+        Array.from(postContainer.querySelectorAll("button, [role='button'], a.artdeco-button"))
+          .filter((node) => node instanceof HTMLElement)
+          .find((button) => {
+            const text = getButtonText(button).toLowerCase();
+            return text.includes("comment") && !text.includes("commenting off");
+          }) || null
+      );
+    }
+
+    function findPostCommentEditor(postContainer) {
+      const selectors = [
+        ".comments-comment-box__form-container [contenteditable='true']",
+        ".comments-comment-box-comment__text-editor[contenteditable='true']",
+        ".editor-content[contenteditable='true']",
+        ".ql-editor[contenteditable='true']",
+        ".comments-comment-box [contenteditable='true'][role='textbox']",
+        ".feed-shared-inline-comment-textarea",
+        "textarea[placeholder*='comment' i]",
+        "[contenteditable='true'][aria-label*='comment' i]"
+      ];
+
+      const scopeCandidates = [postContainer, document].filter(Boolean);
+      for (const scope of scopeCandidates) {
+        for (const selector of selectors) {
+          const match = scope.querySelector(selector);
+          if (match instanceof HTMLElement) {
+            return match;
+          }
+        }
+      }
+
+      return null;
+    }
+
     function findBestReplyEditor() {
       if (lastFocusedEditable && document.contains(lastFocusedEditable)) {
         return lastFocusedEditable;
@@ -544,23 +654,24 @@
       if (!(node instanceof HTMLElement)) {
         return null;
       }
-      return node.closest(".msg-form, .comments-comment-box, form, .share-box-feed-entry, .feed-shared-update-v2");
+      return node.closest(".msg-form, .comments-comment-box, .feed-shared-update-v2, .comments-comment-item, .comments-comment-box__form-container, form, .share-box-feed-entry, article");
     }
 
-    function findReplySendButton(editor) {
+    function findReplySendButton(editor, labels = ["Send", "Post", "Reply"]) {
       const root = findComposerRoot(editor || findBestReplyEditor());
+      const matchers = labels.map((label) => label.toLowerCase());
       if (root) {
         const scopedMatch = Array.from(root.querySelectorAll("button, [role='button'], a.artdeco-button"))
           .filter((node) => node instanceof HTMLElement)
           .find((button) => {
             const text = getButtonText(button).toLowerCase();
-            return text.includes("send") || text.includes("post") || text.includes("reply");
+            return matchers.some((label) => text.includes(label));
           });
         if (scopedMatch) {
           return scopedMatch;
         }
       }
-      return findButtonByText(["Send", "Post", "Reply"]);
+      return findButtonByText(labels);
     }
 
     function isButtonActionable(button) {
@@ -668,6 +779,14 @@
       }
       const main = document.querySelector("main");
       return (main?.innerText || document.body.innerText || "").replace(/\s+/g, " ").trim().slice(0, 4000);
+    }
+
+    function extractPostCommentContext() {
+      const postContainer = findBestPostContainer();
+      if (postContainer) {
+        return (postContainer.innerText || "").replace(/\s+/g, " ").trim().slice(0, 3000);
+      }
+      return extractConversationOrPageContext();
     }
 
     function extractRecruiterConversationContext() {
@@ -791,19 +910,23 @@
         sourceField.value.trim() ||
         (activeScenario === "recruiter_reply"
           ? extractRecruiterConversationContext() || extractConversationOrPageContext()
+          : activeScenario === "post_comment"
+            ? extractPostCommentContext()
           : extractConversationOrPageContext());
       const draft = await generateDraft({ sourceText: context });
       if (!draft.trim()) {
         return "Could not generate a draft for this page.";
       }
 
-      let editor = findBestReplyEditor();
+      const targetPost = activeScenario === "post_comment" ? findBestPostContainer() : null;
+      let editor = activeScenario === "post_comment" ? findPostCommentEditor(targetPost) : findBestReplyEditor();
       if (!editor && activeScenario === "post_comment") {
-        const commentButton = findButtonByText(["Comment"]);
+        const commentButton = findCommentButtonForPost(targetPost) || findButtonByText(["Comment"]);
         if (commentButton) {
+          setWorkingState(true, "Working... opening the post comment box.");
           await clickElement(commentButton);
           await pause(delayMs);
-          editor = findBestReplyEditor();
+          editor = findPostCommentEditor(targetPost) || findBestReplyEditor();
         }
       }
 
@@ -828,7 +951,10 @@
         if (stopRequested) {
           return "Stopped after filling the draft. Send was not clicked.";
         }
-        const sendButton = findReplySendButton(editor);
+        const sendButton =
+          activeScenario === "post_comment"
+            ? findReplySendButton(editor, ["Post", "Comment", "Reply"])
+            : findReplySendButton(editor);
         if (activeScenario === "recruiter_reply") {
           setWorkingState(false, "Recruiter reply is ready for your review.");
           showReviewBar(
@@ -842,15 +968,19 @@
           }
           return "Recruiter reply drafted from the conversation context. Review it, then choose Send Now or Modify First.";
         }
-        if (sendButton) {
+        if (isButtonActionable(sendButton)) {
           await clickElement(sendButton);
           await pause(delayMs);
-          return "Agent filled and sent the reply.";
+          return activeScenario === "post_comment" ? "Agent filled and posted the comment." : "Agent filled and sent the reply.";
         }
-        return "Agent filled the reply, but I could not find the send button.";
+        return activeScenario === "post_comment"
+          ? "Agent filled the comment, but I could not find the Post button."
+          : "Agent filled the reply, but I could not find the send button.";
       }
 
-      return "Agent filled the reply. Review it and click send when ready.";
+      return activeScenario === "post_comment"
+        ? "Agent filled the comment. Review it and click Post when ready."
+        : "Agent filled the reply. Review it and click send when ready.";
     }
 
     async function runAutomation(forceSend) {
